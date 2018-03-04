@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <div id="app-4">
+        <form v-on:submit.prevent="onSubmit" action="" id="add_item">
+            <input id="inp_todo" type="text" class="form-control">
+        </form>
+        <ol>
+            <li v-for="todo in show_todos(vis)">
+                <input class="inp_todo" :value="todo.text" type="checkbox" v-model="todo.complete">
+                <label class="label_todo" v-bind:class="{ text: todo.complete }">{{ todo.text }}</label>
+                <hr>
+            </li>
+        </ol>
+        <div> {{show_todos(vis).length}} </div>
+        <div>
+            <a href="#" id="all_todos" v-on:click="change_vis">All</a>
+            <a href="#" id="active_todos" v-on:click="change_vis">Active</a>
+            <a href="#" id="complete_todos" v-on:click="change_vis">Complete</a>
+        </div>
+    </div>
+    <script>
+        var app4 = new Vue({
+            el: '#app-4',
+            data: {
+                todos: [],
+                vis: 'all'
+            },
+            methods: {
+                show_todos: function (vis) {
+                    if (vis.toLowerCase() === 'all')
+                        return this.todos;
+                    if (vis.toLowerCase() === 'active')
+                        return this.todos.filter((el) => {
+                            return !el.complete;
+                        });
+                    if (vis.toLowerCase() === 'complete')
+                        return this.todos.filter((el) => {
+                            return el.complete;
+                        });
+                },
+                change_vis: function (event) {
+                    var vis = event.toElement.innerText;
+                    this.show_todos(vis);
+                    this.vis = vis;
+                },
+                onSubmit: function (e) {
+                    this.todos.push({
+                        text: $('#inp_todo').val(),
+                        complete: false
+                    });
+                    $('#inp_todo').val('');
+                }
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script async src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script>
+        if (window.module) module = window.module;
+    </script>
+</body>
+
+</html>
